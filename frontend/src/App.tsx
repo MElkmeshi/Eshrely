@@ -1,33 +1,30 @@
-import data from "./data";
+import Home from "./Components/Home";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Product from "./Components/Product";
+import Navbar from "react-bootstrap/Navbar";
+import Container from "react-bootstrap/Container";
+import { LinkContainer } from "react-router-bootstrap";
 
 function App() {
   return (
-    <>
-      <header style={{ backgroundColor: "black", padding: "1rem" }}>
-        <a href="/">Eshrely</a>
-      </header>
+    <BrowserRouter>
+      <Navbar bg="dark" variant="dark">
+        <Container>
+          <LinkContainer to="/">
+            <Navbar.Brand href="#home">Eshrely</Navbar.Brand>
+          </LinkContainer>
+        </Container>
+      </Navbar>
       <main>
-        <h1>Products</h1>
-        <div className="products">
-          {data.products.map((product) => (
-            <div className="product" key={product.slug}>
-              <a href={`product/${product.slug}`}>
-                <img src={product.image} alt={product.name} />
-              </a>
-              <div className="product-info">
-                <a href={`product/${product.slug}`}>
-                  <p>{product.name}</p>
-                </a>
-                <p>
-                  <strong>${product.price}</strong>
-                </p>
-                <button>Add to cart</button>
-              </div>
-            </div>
-          ))}
-        </div>
+        <Routes>
+          <Route path="/" element={<Home />}></Route>
+          <Route path="/product/:slug" element={<Product />}></Route>
+          <Route path="/cart" element={<div>Cart</div>}></Route>
+          <Route path="/signin" element={<div>Sign In</div>}></Route>
+          <Route path="/register" element={<div>Register</div>}></Route>
+        </Routes>
       </main>
-    </>
+    </BrowserRouter>
   );
 }
 
