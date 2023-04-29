@@ -8,6 +8,7 @@ import { ProductInterface } from "../types";
 
 export default function CartScreen() {
   const context = useContext(Store);
+
   if (!context) throw Error("Store shouldn't be null");
   const { state } = context;
   const {
