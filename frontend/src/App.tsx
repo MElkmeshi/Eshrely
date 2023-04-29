@@ -1,11 +1,19 @@
 import HomeScreen from "./Screens/HomeScreen";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import ProductScreen from "./Screens/ProductScreen";
 import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
+import Badge from "react-bootstrap/Badge";
 import Container from "react-bootstrap/Container";
 import { LinkContainer } from "react-router-bootstrap";
+import { Store, ContextValue } from "./Store";
+import { useContext } from "react";
 
 function App() {
+  const contextValue = useContext<ContextValue | null>(Store);
+  if (!contextValue) throw new Error("Store context not found");
+  const { state } = contextValue;
+  const { cart } = state;
   return (
     <BrowserRouter>
       <div className="d-flex flex-column site-container">
@@ -15,6 +23,19 @@ function App() {
               <LinkContainer to="/">
                 <Navbar.Brand href="#home">Eshrely</Navbar.Brand>
               </LinkContainer>
+              <Nav className="me-auto">
+                <Link to="/cart" className="nav-link">
+                  Cart
+                  {cart.cartItems.length > 0 && (
+                    <Badge pill bg="danger">
+                      {cart.cartItems.reduce(
+                        (a, c) => a + (c.quantity ? c.quantity : 0),
+                        0
+                      )}
+                    </Badge>
+                  )}
+                </Link>
+              </Nav>
             </Container>
           </Navbar>
         </header>
