@@ -4,6 +4,8 @@ import { Row, Col } from "react-bootstrap";
 import Product from "../Components/Product";
 import { AppAction, StateProductsPage } from "../types";
 import { Helmet } from "react-helmet-async";
+import LoadingBox from "../Components/LoadingBox";
+import MessageBox from "../Components/MessageBox";
 
 function Home() {
   const [{ loading, error, products }, dispatch] = useReducer(
@@ -46,9 +48,9 @@ function Home() {
       <h1>Latest Products</h1>
       <div className="products">
         {loading ? (
-          <div>Loading...</div>
+          <LoadingBox />
         ) : error ? (
-          <div>{error}</div>
+          <MessageBox variant="danger">{error}</MessageBox>
         ) : (
           <Row>
             {products.map((product) => (
@@ -62,4 +64,5 @@ function Home() {
     </>
   );
 }
+
 export default Home;
