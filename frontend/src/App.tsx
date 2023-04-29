@@ -8,22 +8,29 @@ import { LinkContainer } from "react-router-bootstrap";
 function App() {
   return (
     <BrowserRouter>
-      <Navbar bg="dark" variant="dark">
-        <Container>
-          <LinkContainer to="/">
-            <Navbar.Brand href="#home">Eshrely</Navbar.Brand>
-          </LinkContainer>
-        </Container>
-      </Navbar>
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/product/:slug" element={<Product />}></Route>
-          <Route path="/cart" element={<div>Cart</div>}></Route>
-          <Route path="/signin" element={<div>Sign In</div>}></Route>
-          <Route path="/register" element={<div>Register</div>}></Route>
-        </Routes>
-      </main>
+      <div className="d-flex flex-column site-container">
+        <header>
+          <Navbar bg="dark" variant="dark">
+            <Container>
+              <LinkContainer to="/">
+                <Navbar.Brand href="#home">Eshrely</Navbar.Brand>
+              </LinkContainer>
+            </Container>
+          </Navbar>
+        </header>
+        <main>
+          <Container>
+            <Routes>
+              <Route path="/" element={<Home />}></Route>
+              <Route path="/product/:slug" element={<Product />}></Route>
+              <Route path="/cart" element={<div>Cart</div>}></Route>
+              <Route path="/signin" element={<div>Sign In</div>}></Route>
+              <Route path="/register" element={<div>Register</div>}></Route>
+            </Routes>
+          </Container>
+        </main>
+        <footer className="text-center">All Rights</footer>
+      </div>
     </BrowserRouter>
   );
 }
