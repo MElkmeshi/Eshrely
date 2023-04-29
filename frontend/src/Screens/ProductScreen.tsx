@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useReducer, useContext } from "react";
 import { AppActionOneProductPage, StateOneProductPage } from "../types";
 import axios from "axios";
@@ -16,6 +16,7 @@ import { getError } from "../utils";
 import { Store, ContextValue } from "../Store";
 
 function Product() {
+  const navigate = useNavigate();
   const { slug } = useParams();
   const [{ loading, error, product }, dispatch] = useReducer(
     (state: StateOneProductPage, action: AppActionOneProductPage) => {
@@ -75,6 +76,7 @@ function Product() {
       type: "CART_ADD_ITEM",
       payload: { ...product, quantity },
     });
+    navigate("/cart");
   };
 
   return loading ? (

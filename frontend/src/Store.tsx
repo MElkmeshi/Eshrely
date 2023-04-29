@@ -1,4 +1,4 @@
-import { createContext, useReducer, Dispatch, ReactNode } from "react";
+import { createContext, useReducer, ReactNode } from "react";
 import { ProductInterface } from "./types";
 // Define the state type
 interface State {
@@ -12,7 +12,7 @@ interface Action {
 }
 export interface ContextValue {
   state: State;
-  dispatch: Dispatch<Action>;
+  dispatch: React.Dispatch<Action>;
 }
 export const Store = createContext<ContextValue | null>(null);
 const initialState: State = {
