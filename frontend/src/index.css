@@ -19,6 +19,9 @@ main {
   background-color: #f0c040;
   color: #000000;
 }
+.img-large {
+  max-width: 100%;
+}
 /*.rating span:hover {
   cursor: pointer;
 }

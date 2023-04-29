@@ -2,47 +2,29 @@ import axios from "axios";
 import { useEffect, useReducer } from "react";
 import { Row, Col } from "react-bootstrap";
 import Product from "../Components/Product";
-import { ProductInterface } from "../types";
-
-interface FetchRequestAction {
-  type: "FETCH_REQUEST";
-}
-interface FetchSuccessAction {
-  type: "FETCH_SUCCESS";
-  payload: ProductInterface[];
-}
-interface FetchFailAction {
-  type: "FETCH_FAIL";
-  payload: string;
-}
-type AppAction = FetchRequestAction | FetchSuccessAction | FetchFailAction;
-
-interface AppState {
-  products: ProductInterface[];
-  loading: boolean;
-  error: string;
-}
-
-const reducer = (state: AppState, action: AppAction) => {
-  switch (action.type) {
-    case "FETCH_REQUEST":
-      return { ...state, loading: true };
-    case "FETCH_SUCCESS":
-      return { ...state, products: action.payload, loading: false };
-    case "FETCH_FAIL":
-      return { ...state, loading: false, error: action.payload };
-    default:
-      return state;
-  }
-};
+import { AppAction, StateProductsPage } from "../types";
+import { Helmet } from "react-helmet-async";
 
 function Home() {
-  const [{ loading, error, products }, dispatch] = useReducer(reducer, {
-    products: [],
-    loading: true,
-    error: "",
-  } as AppState);
-
+  const [{ loading, error, products }, dispatch] = useReducer(
+    (state: StateProductsPage, action: AppAction) => {
+      switch (action.type) {
+        case "FETCH_REQUEST":
+          return { ...state, loading: true };
+        case "FETCH_SUCCESS":
+          return { ...state, products: action.payload, loading: false };
+        case "FETCH_FAIL":
+          return { ...state, loading: false, error: action.payload };
+        default:
+          return state;
+      }
+    },
+    {
+      products: [],
+      loading: true,
+      error: "",
+    } as StateProductsPage
+  );
   useEffect(() => {
     const fetchData = async () => {
       dispatch({ type: "FETCH_REQUEST" } as AppAction);
@@ -58,7 +40,10 @@ function Home() {
   }, []);
   return (
     <>
-      <h1>Featured Products</h1>
+      <Helmet>
+        <title>Eshrely</title>
+      </Helmet>
+      <h1>Latest Products</h1>
       <div className="products">
         {loading ? (
           <div>Loading...</div>
