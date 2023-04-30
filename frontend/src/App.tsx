@@ -9,6 +9,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Store, ContextValue } from "./Store";
 import { useContext } from "react";
 import CartScreen from "./Screens/CartScreen";
+import SigninScreen from "./Screens/SigninScreen";
 
 function App() {
   const contextValue = useContext<ContextValue | null>(Store);
@@ -46,7 +47,7 @@ function App() {
               <Route path="/" element={<HomeScreen />}></Route>
               <Route path="/product/:slug" element={<ProductScreen />}></Route>
               <Route path="/cart" element={<CartScreen />}></Route>
-              <Route path="/signin" element={<div>Sign In</div>}></Route>
+              <Route path="/signin" element={<SigninScreen />}></Route>
               <Route path="/register" element={<div>Register</div>}></Route>
             </Routes>
           </Container>
