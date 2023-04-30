@@ -1,5 +1,6 @@
 import bcryptjs from "bcryptjs";
-interface Product {
+
+export interface Product {
   name: string;
   slug: string;
   category: string;
@@ -11,16 +12,15 @@ interface Product {
   numReviews: number;
   description: string;
 }
-interface User {
+export interface UserInterface {
   name: string;
   email: string;
   password: string;
   isAdmin: boolean;
 }
-
-interface Data {
+export interface Data {
   products: Product[];
-  users: User[];
+  users: UserInterface[];
 }
 
 const data: Data = {
