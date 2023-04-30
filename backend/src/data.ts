@@ -1,3 +1,4 @@
+import bcryptjs from "bcryptjs";
 interface Product {
   name: string;
   slug: string;
@@ -10,11 +11,33 @@ interface Product {
   numReviews: number;
   description: string;
 }
+interface User {
+  name: string;
+  email: string;
+  password: string;
+  isAdmin: boolean;
+}
+
 interface Data {
   products: Product[];
+  users: User[];
 }
 
 const data: Data = {
+  users: [
+    {
+      name: "Mohamed Elkmeshi",
+      email: "elkmeshi2002@gmail.com",
+      password: bcryptjs.hashSync("MohElk13241?"),
+      isAdmin: true,
+    },
+    {
+      name: "Naeem Allwati",
+      email: "nallwati@redtech.ly",
+      password: bcryptjs.hashSync("1234"),
+      isAdmin: true,
+    },
+  ],
   products: [
     {
       name: "Nike Slim shirt",
