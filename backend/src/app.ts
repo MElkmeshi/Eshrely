@@ -1,31 +1,21 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import data from "./data";
 const app = express();
 const port = process.env.PORT || 3000;
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import seedRouter from "../routes/seedRoutes";
+import productRouter from "../routes/productRoutes";
 
-app.get("/api/products", async (req, res) => {
-  res.send(data.products);
-});
-app.get("/api/products/slug/:slug", async (req, res) => {
-  const product = data.products.find(
-    (product) => product.slug === req.params.slug
-  );
-  if (product) {
-    res.send(product);
-  } else {
-    res.status(404).send({ message: "Product Not Found" });
-  }
-});
-app.get("/api/products/:id", async (req, res) => {
-  const product = data.products.find(
-    (product) => product._id === req.params.id
-  );
-  if (product) {
-    res.send(product);
-  } else {
-    res.status(404).send({ message: "Product Not Found" });
-  }
-});
+dotenv.config();
+
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => console.log("Connected to mongodb"))
+  .catch((error) => console.log(error.message));
+
+app.use("/api/seed", seedRouter);
+app.use("/api/products", productRouter);
 
 app.listen(port, () =>
   console.log(`Server is listening at http://localhost:${port}`)
