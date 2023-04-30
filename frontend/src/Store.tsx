@@ -14,10 +14,11 @@ export interface ContextValue {
   state: State;
   dispatch: React.Dispatch<Action>;
 }
+const thelocalstorge = localStorage.getItem("cartItems");
 export const Store = createContext<ContextValue | null>(null);
 const initialState: State = {
   cart: {
-    cartItems: [],
+    cartItems: thelocalstorge ? JSON.parse(thelocalstorge) : [],
   },
 };
 
@@ -33,7 +34,19 @@ function reducer(state: State, action: Action): State {
     : [...state.cart.cartItems, newItem];
   switch (action.type) {
     case "CART_ADD_ITEM":
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
       return { ...state, cart: { ...state.cart, cartItems } };
+    case "CART_REMOVE_ITEM":
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          cartItems: state.cart.cartItems.filter(
+            (item) => item._id !== action.payload._id
+          ),
+        },
+      };
     default:
       return state;
   }
