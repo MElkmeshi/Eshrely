@@ -8,6 +8,13 @@ interface LoginInterface {
   token: string;
   _id: string;
 }
+interface ShippingInterface {
+  fullName: string;
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
+}
 interface Action1 {
   type: "CART_ADD_ITEM" | "CART_REMOVE_ITEM";
   payload: ProductInterface;
@@ -19,12 +26,17 @@ interface Action2 {
 interface Action3 {
   type: "USER_SIGNOUT";
 }
-type Action = Action1 | Action2 | Action3;
+interface Action4 {
+  type: "SAVE_SHIPPING_ADDRESS";
+  payload: ShippingInterface;
+}
+type Action = Action1 | Action2 | Action3 | Action4;
 
 interface State {
   userInfo: LoginInterface | null;
   cart: {
     cartItems: ProductInterface[];
+    shippingAddress: ShippingInterface | null;
   };
 }
 export interface ContextValue {
@@ -33,11 +45,13 @@ export interface ContextValue {
 }
 const thelocalcart = localStorage.getItem("cartItems");
 const thelocaluser = localStorage.getItem("userInfo");
+const thelocalshipping = localStorage.getItem("shippingAddress");
 export const Store = createContext<ContextValue | null>(null);
 const initialState: State = {
-  userInfo: thelocaluser ? JSON.parse(thelocaluser) : {},
+  userInfo: thelocaluser ? JSON.parse(thelocaluser) : null,
   cart: {
     cartItems: thelocalcart ? JSON.parse(thelocalcart) : [],
+    shippingAddress: thelocalshipping ? JSON.parse(thelocalshipping) : {},
   },
 };
 
@@ -66,7 +80,12 @@ function reducer(state: State, action: Action): State {
     case "USER_SIGNIN":
       return { ...state, userInfo: action.payload as LoginInterface };
     case "USER_SIGNOUT":
-      return { ...state, userInfo: null };
+      return { cart: { cartItems: [], shippingAddress: null }, userInfo: null };
+    case "SAVE_SHIPPING_ADDRESS":
+      return {
+        ...state,
+        cart: { ...state.cart, shippingAddress: action.payload },
+      };
     default:
       return state;
   }

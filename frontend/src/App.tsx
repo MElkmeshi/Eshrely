@@ -13,6 +13,7 @@ import { useContext } from "react";
 import CartScreen from "./Screens/CartScreen";
 import SigninScreen from "./Screens/SigninScreen";
 import { NavDropdown } from "react-bootstrap";
+import ShippingScreen from "./Screens/ShippingScreen";
 
 function App() {
   const contextValue = useContext<ContextValue | null>(Store);
@@ -22,6 +23,8 @@ function App() {
   const signoutHandler = () => {
     ctxDispatch({ type: "USER_SIGNOUT" });
     localStorage.removeItem("userInfo");
+    localStorage.removeItem("shippingAddress");
+    localStorage.removeItem("cartItems");
   };
   return (
     <BrowserRouter>
@@ -79,6 +82,7 @@ function App() {
               <Route path="/cart" element={<CartScreen />}></Route>
               <Route path="/signin" element={<SigninScreen />}></Route>
               <Route path="/register" element={<div>Register</div>}></Route>
+              <Route path="/shipping" element={<ShippingScreen />}></Route>
             </Routes>
           </Container>
         </main>
