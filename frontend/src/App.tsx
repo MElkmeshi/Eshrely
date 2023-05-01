@@ -14,6 +14,7 @@ import CartScreen from "./Screens/CartScreen";
 import SigninScreen from "./Screens/SigninScreen";
 import { NavDropdown } from "react-bootstrap";
 import ShippingScreen from "./Screens/ShippingScreen";
+import SignupScreen from "./Screens/SignupScreen";
 
 function App() {
   const contextValue = useContext<ContextValue | null>(Store);
@@ -81,7 +82,7 @@ function App() {
               <Route path="/product/:slug" element={<ProductScreen />}></Route>
               <Route path="/cart" element={<CartScreen />}></Route>
               <Route path="/signin" element={<SigninScreen />}></Route>
-              <Route path="/register" element={<div>Register</div>}></Route>
+              <Route path="/signup" element={<SignupScreen />}></Route>
               <Route path="/shipping" element={<ShippingScreen />}></Route>
             </Routes>
           </Container>
