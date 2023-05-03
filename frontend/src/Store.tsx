@@ -30,13 +30,22 @@ interface Action4 {
   type: "SAVE_SHIPPING_ADDRESS";
   payload: ShippingInterface;
 }
-type Action = Action1 | Action2 | Action3 | Action4;
+interface Action5 {
+  type: "SAVE_PAYMENT_METHOD";
+  payload: string;
+}
+type Action = Action1 | Action2 | Action3 | Action4 | Action5;
 
 interface State {
   userInfo: LoginInterface | null;
   cart: {
     cartItems: ProductInterface[];
     shippingAddress: ShippingInterface | null;
+    paymentMethod: string | null;
+    totalPrice?: number;
+    taxPrice?: number;
+    shippingPrice?: number;
+    itemsPrice?: number;
   };
 }
 export interface ContextValue {
@@ -46,12 +55,14 @@ export interface ContextValue {
 const thelocalcart = localStorage.getItem("cartItems");
 const thelocaluser = localStorage.getItem("userInfo");
 const thelocalshipping = localStorage.getItem("shippingAddress");
+const thelocalpayment = localStorage.getItem("paymentMethod");
 export const Store = createContext<ContextValue | null>(null);
 const initialState: State = {
   userInfo: thelocaluser ? JSON.parse(thelocaluser) : null,
   cart: {
     cartItems: thelocalcart ? JSON.parse(thelocalcart) : [],
     shippingAddress: thelocalshipping ? JSON.parse(thelocalshipping) : {},
+    paymentMethod: thelocalpayment ? thelocalpayment : null,
   },
 };
 
@@ -80,12 +91,21 @@ function reducer(state: State, action: Action): State {
     case "USER_SIGNIN":
       return { ...state, userInfo: action.payload as LoginInterface };
     case "USER_SIGNOUT":
-      return { cart: { cartItems: [], shippingAddress: null }, userInfo: null };
+      return {
+        cart: { cartItems: [], shippingAddress: null, paymentMethod: null },
+        userInfo: null,
+      };
     case "SAVE_SHIPPING_ADDRESS":
       return {
         ...state,
         cart: { ...state.cart, shippingAddress: action.payload },
       };
+    case "SAVE_PAYMENT_METHOD": {
+      return {
+        ...state,
+        cart: { ...state.cart, paymentMethod: action.payload },
+      };
+    }
     default:
       return state;
   }

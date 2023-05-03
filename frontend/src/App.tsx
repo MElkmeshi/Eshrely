@@ -15,6 +15,8 @@ import SigninScreen from "./Screens/SigninScreen";
 import { NavDropdown } from "react-bootstrap";
 import ShippingScreen from "./Screens/ShippingScreen";
 import SignupScreen from "./Screens/SignupScreen";
+import PaymentMethodScreen from "./Screens/PaymentScreen";
+import PlaceOrderScreen from "./Screens/PlaceOrderScreen";
 
 function App() {
   const contextValue = useContext<ContextValue | null>(Store);
@@ -26,6 +28,7 @@ function App() {
     localStorage.removeItem("userInfo");
     localStorage.removeItem("shippingAddress");
     localStorage.removeItem("cartItems");
+    localStorage.removeItem("paymentMethod");
   };
   return (
     <BrowserRouter>
@@ -84,6 +87,8 @@ function App() {
               <Route path="/signin" element={<SigninScreen />}></Route>
               <Route path="/signup" element={<SignupScreen />}></Route>
               <Route path="/shipping" element={<ShippingScreen />}></Route>
+              <Route path="/payment" element={<PaymentMethodScreen />}></Route>
+              <Route path="/placeorder" element={<PlaceOrderScreen />}></Route>
             </Routes>
           </Container>
         </main>
