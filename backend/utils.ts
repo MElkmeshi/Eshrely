@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import { UserInterface } from "./src/data";
 import { Document } from "mongoose";
+import { Request, Response, NextFunction } from "express";
 
 export interface UserInterfaceWithDocument extends UserInterface, Document {}
 
@@ -18,3 +19,24 @@ export function generateToken(user: UserInterfaceWithDocument) {
     }
   );
 }
+
+export const isAuth = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  const authorization = req.headers.authorization;
+  if (authorization) {
+    const token = authorization.slice(7, authorization.length); // Bearer XXXXXX
+    jwt.verify(token, process.env.JWT_SECRET as string, (err, decode) => {
+      if (err) {
+        res.status(401).send({ message: "Invalid Token" });
+      } else {
+        req.body.user = decode;
+        next();
+      }
+    });
+  } else {
+    res.status(401).send({ message: "No Token" });
+  }
+};

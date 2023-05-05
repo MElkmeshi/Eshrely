@@ -14,7 +14,7 @@ function Home() {
         case "FETCH_REQUEST":
           return { ...state, loading: true };
         case "FETCH_SUCCESS":
-          return { ...state, products: action.payload, loading: false };
+          return { ...state, loading: false, products: action.payload };
         case "FETCH_FAIL":
           return { ...state, loading: false, error: action.payload };
         default:
@@ -32,6 +32,7 @@ function Home() {
       dispatch({ type: "FETCH_REQUEST" } as AppAction);
       try {
         const result = await axios.get("/api/products");
+        console.log(result.data);
         dispatch({ type: "FETCH_SUCCESS", payload: result.data } as AppAction);
       } catch (err: unknown) {
         if (axios.isAxiosError(err))

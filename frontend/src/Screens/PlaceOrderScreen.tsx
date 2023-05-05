@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useReducer } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useNavigate } from "react-router-dom";
 import Row from "react-bootstrap/Row";
@@ -8,8 +8,35 @@ import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
 import { ContextValue, Store } from "../Store";
 import CheckoutSteps from "../Components/CheckoutSteps";
+import axios, { AxiosError } from "axios";
+import { toast } from "react-toastify";
+import { getError } from "../utils";
+import LoadingBox from "../Components/LoadingBox";
+
+interface State {
+  loading: boolean;
+}
+interface Action {
+  type: string;
+}
+
+const reducer = (state: State, action: Action) => {
+  switch (action.type) {
+    case "CREATE_REQUEST":
+      return { ...state, loading: true };
+    case "CREATE_SUCCESS":
+      return { ...state, loading: false };
+    case "CREATE_FAIL":
+      return { ...state, loading: false };
+    default:
+      return state;
+  }
+};
 
 export default function PlaceOrderScreen() {
+  const [{ loading }, dispatch] = useReducer(reducer, {
+    loading: false,
+  } as State);
   const navigate = useNavigate();
   const contextValue = useContext<ContextValue | null>(Store);
   if (!contextValue) throw new Error("Store context not found");
@@ -17,6 +44,7 @@ export default function PlaceOrderScreen() {
   const { cart, userInfo } = state;
   if (!cart) throw new Error("Cart Object context not found");
   if (!cart.cartItems) throw new Error("Cart context not found");
+  if (!userInfo) throw new Error("userInfo not found");
   if (!cart.shippingAddress)
     throw new Error("Shipping Address context not found");
   const round2 = (num: number) => Math.round(num * 100 + Number.EPSILON) / 100; // 123.2345 => 123.23
@@ -27,8 +55,36 @@ export default function PlaceOrderScreen() {
   cart.taxPrice = round2(0 * cart.itemsPrice);
   cart.totalPrice = cart.itemsPrice + cart.shippingPrice + cart.taxPrice;
 
-  //   const placeOrderHandler = async () => {};
+  const placeOrderHandler = async () => {
+    try {
+      dispatch({ type: "CREATE_REQUEST" });
 
+      const { data } = await axios.post(
+        "/api/orders",
+        {
+          orderItems: cart.cartItems,
+          shippingAddress: cart.shippingAddress,
+          paymentMethod: cart.paymentMethod,
+          itemsPrice: cart.itemsPrice,
+          shippingPrice: cart.shippingPrice,
+          taxPrice: cart.taxPrice,
+          totalPrice: cart.totalPrice,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+      );
+      ctxDispatch({ type: "CART_CLEAR" });
+      dispatch({ type: "CREATE_SUCCESS" });
+      localStorage.removeItem("cartItems");
+      navigate(`/order/${data.order._id}`);
+    } catch (err) {
+      dispatch({ type: "CREATE_FAIL" });
+      if (err instanceof AxiosError) toast.error(getError(err));
+    }
+  };
   useEffect(() => {
     if (!cart.paymentMethod) {
       navigate("/payment");
@@ -132,12 +188,13 @@ export default function PlaceOrderScreen() {
                   <div className="d-grid">
                     <Button
                       type="button"
-                      //   onClick={placeOrderHandler}
+                      onClick={placeOrderHandler}
                       disabled={cart.cartItems.length === 0}
                     >
                       Place Order
                     </Button>
                   </div>
+                  {loading && <LoadingBox />}
                 </ListGroup.Item>
               </ListGroup>
             </Card.Body>

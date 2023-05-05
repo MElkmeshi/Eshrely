@@ -24,7 +24,7 @@ interface Action2 {
   payload: LoginInterface;
 }
 interface Action3 {
-  type: "USER_SIGNOUT";
+  type: "USER_SIGNOUT" | "CART_CLEAR";
 }
 interface Action4 {
   type: "SAVE_SHIPPING_ADDRESS";
@@ -61,7 +61,7 @@ const initialState: State = {
   userInfo: thelocaluser ? JSON.parse(thelocaluser) : null,
   cart: {
     cartItems: thelocalcart ? JSON.parse(thelocalcart) : [],
-    shippingAddress: thelocalshipping ? JSON.parse(thelocalshipping) : {},
+    shippingAddress: thelocalshipping ? JSON.parse(thelocalshipping) : null,
     paymentMethod: thelocalpayment ? thelocalpayment : null,
   },
 };
@@ -104,6 +104,12 @@ function reducer(state: State, action: Action): State {
       return {
         ...state,
         cart: { ...state.cart, paymentMethod: action.payload },
+      };
+    }
+    case "CART_CLEAR": {
+      return {
+        ...state,
+        cart: { ...state.cart, cartItems: [] },
       };
     }
     default:
