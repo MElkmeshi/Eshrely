@@ -15,7 +15,8 @@ main {
 .rating span {
   color: #ffcc00;
 }
-.btn-primary {
+.btn-primary,
+.btn-outline-primary {
   background-color: #f0c040;
   color: #000000;
 }
@@ -36,7 +37,28 @@ main {
   border-bottom: 0.2rem solid #f0a000;
   color: #f0a000;
 }
+/* sidebar */
+.navbar-brand {
+  font-weight: bold;
+}
+.side-navbar {
+  width: 240px;
+  height: 100%;
+  position: absolute;
+  left: -300px;
+  background-color: #100901;
+  transition: 0.5s;
+}
 
+.site-container {
+  transition: 0.4s;
+}
+.active-cont {
+  margin-left: 240px;
+}
+.active-nav {
+  left: 0;
+}
 /*.rating span:hover {
   cursor: pointer;
 }

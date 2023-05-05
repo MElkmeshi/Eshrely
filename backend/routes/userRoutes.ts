@@ -3,7 +3,7 @@ import expressAsyncHandler from "express-async-handler";
 import User from "../models/userModel";
 const userRouter = express.Router();
 import bcryptjs from "bcryptjs";
-import { generateToken } from "../utils";
+import { generateToken, isAuth } from "../utils";
 
 userRouter.post(
   "/signin",
@@ -41,6 +41,31 @@ userRouter.post(
       isAdmin: createdUser.isAdmin,
       token: generateToken(createdUser),
     });
+  })
+);
+
+userRouter.put(
+  "/profile",
+  isAuth,
+  expressAsyncHandler(async (req: Request, res: Response) => {
+    const user = await User.findById(req.body.user._id);
+    if (user) {
+      user.name = req.body.name || user.name;
+      user.email = req.body.email || user.email;
+      if (req.body.password) {
+        user.password = bcryptjs.hashSync(req.body.password, 8);
+      }
+      const updatedUser = await user.save();
+      res.send({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        isAdmin: updatedUser.isAdmin,
+        token: generateToken(updatedUser),
+      });
+    } else {
+      res.status(404).send({ message: "User Not Found" });
+    }
   })
 );
 
