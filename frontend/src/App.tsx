@@ -23,6 +23,7 @@ import ProfileScreen from "./Screens/ProfileScreen";
 import { getError } from "./utils";
 import axios, { AxiosError } from "axios";
 import SearchBox from "./Components/SearchBox";
+import SearchScreen from "./Screens/SearchScreen";
 
 function App() {
   const contextValue = useContext<ContextValue | null>(Store);
@@ -147,6 +148,7 @@ function App() {
               <Route path="/" element={<HomeScreen />}></Route>
               <Route path="/product/:slug" element={<ProductScreen />}></Route>
               <Route path="/cart" element={<CartScreen />}></Route>
+              <Route path="/search" element={<SearchScreen />}></Route>
               <Route path="/signin" element={<SigninScreen />}></Route>
               <Route path="/signup" element={<SignupScreen />}></Route>
               <Route path="/shipping" element={<ShippingScreen />}></Route>

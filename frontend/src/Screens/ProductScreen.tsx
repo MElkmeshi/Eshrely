@@ -15,7 +15,7 @@ import MessageBox from "../Components/MessageBox";
 import { getError } from "../utils";
 import { Store, ContextValue } from "../Store";
 
-function Product() {
+function ProductScreen() {
   const navigate = useNavigate();
   const { slug } = useParams();
   const [{ loading, error, product }, dispatch] = useReducer(
@@ -149,4 +149,4 @@ function Product() {
   );
 }
 
-export default Product;
+export default ProductScreen;

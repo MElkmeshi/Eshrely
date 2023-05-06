@@ -1,8 +1,9 @@
 interface RatingProps {
   rating: number;
-  numReviews: number;
+  numReviews?: number;
+  caption?: string;
 }
-function Rating({ rating, numReviews }: RatingProps) {
+function Rating({ rating, numReviews, caption }: RatingProps) {
   return (
     <div className="rating">
       <span>
@@ -14,7 +15,7 @@ function Rating({ rating, numReviews }: RatingProps) {
               ? "fas fa-star-half-alt"
               : "far fa-star"
           }
-        ></i>
+        />
       </span>
       <span>
         <i
@@ -25,7 +26,7 @@ function Rating({ rating, numReviews }: RatingProps) {
               ? "fas fa-star-half-alt"
               : "far fa-star"
           }
-        ></i>
+        />
       </span>
       <span>
         <i
@@ -36,7 +37,7 @@ function Rating({ rating, numReviews }: RatingProps) {
               ? "fas fa-star-half-alt"
               : "far fa-star"
           }
-        ></i>
+        />
       </span>
       <span>
         <i
@@ -47,7 +48,7 @@ function Rating({ rating, numReviews }: RatingProps) {
               ? "fas fa-star-half-alt"
               : "far fa-star"
           }
-        ></i>
+        />
       </span>
       <span>
         <i
@@ -58,9 +59,13 @@ function Rating({ rating, numReviews }: RatingProps) {
               ? "fas fa-star-half-alt"
               : "far fa-star"
           }
-        ></i>
+        />
       </span>
-      <span>{numReviews + " reviews"}</span>
+      {caption ? (
+        <span>{caption}</span>
+      ) : (
+        <span>{" " + numReviews + " reviews"}</span>
+      )}
     </div>
   );
 }
