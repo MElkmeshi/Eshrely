@@ -7,11 +7,14 @@ git clone https://github.com/MElkmeshi/Eshrely.git
 then change dirctoty to the folder which contains the code
 and run two terminals one for backend and the other for the frontend 
 for the the backend
+```console
 cd backend 
 npm i
 npm run dev 
-
+```
 for the frontend same stpes
+```console
 cd frontend 
 npm i
 npm run dev 
+```
