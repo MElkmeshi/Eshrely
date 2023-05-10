@@ -24,6 +24,9 @@ import { getError } from "./utils";
 import axios, { AxiosError } from "axios";
 import SearchBox from "./Components/SearchBox";
 import SearchScreen from "./Screens/SearchScreen";
+import ProtractedRoute from "./Components/ProtractedRoute";
+import AdminRoute from "./Components/AdminRoute";
+import DashboardScreen from "./Screens/DashboardScreen";
 
 function App() {
   const {
@@ -111,6 +114,22 @@ function App() {
                       Sign In
                     </Link>
                   )}
+                  {userInfo && userInfo.isAdmin && (
+                    <NavDropdown title="Admin" id="admin-nav-dropdown">
+                      <LinkContainer to="/admin/dashboard">
+                        <NavDropdown.Item>Dashboard</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/productlist">
+                        <NavDropdown.Item>Products</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/orderlist">
+                        <NavDropdown.Item>Orders</NavDropdown.Item>
+                      </LinkContainer>
+                      <LinkContainer to="/admin/userlist">
+                        <NavDropdown.Item>Users</NavDropdown.Item>
+                      </LinkContainer>
+                    </NavDropdown>
+                  )}
                 </Nav>
               </Navbar.Collapse>
             </Container>
@@ -145,21 +164,69 @@ function App() {
         <main>
           <Container className="mt-3">
             <Routes>
-              <Route path="/" element={<HomeScreen />}></Route>
-              <Route path="/product/:slug" element={<ProductScreen />}></Route>
-              <Route path="/cart" element={<CartScreen />}></Route>
-              <Route path="/search" element={<SearchScreen />}></Route>
-              <Route path="/signin" element={<SigninScreen />}></Route>
-              <Route path="/signup" element={<SignupScreen />}></Route>
-              <Route path="/shipping" element={<ShippingScreen />}></Route>
-              <Route path="/payment" element={<PaymentMethodScreen />}></Route>
-              <Route path="/profile" element={<ProfileScreen />}></Route>
-              <Route path="/placeorder" element={<PlaceOrderScreen />}></Route>
-              <Route path="/order/:id" element={<OrderScreen />}></Route>
+              <Route path="/" element={<HomeScreen />} />
+              <Route path="/product/:slug" element={<ProductScreen />} />
+              <Route path="/cart" element={<CartScreen />} />
+              <Route path="/search" element={<SearchScreen />} />
+              <Route path="/signin" element={<SigninScreen />} />
+              <Route path="/signup" element={<SignupScreen />} />
+              <Route
+                path="/shipping"
+                element={
+                  <ProtractedRoute>
+                    <ShippingScreen />
+                  </ProtractedRoute>
+                }
+              />
+              <Route
+                path="/payment"
+                element={
+                  <ProtractedRoute>
+                    <PaymentMethodScreen />
+                  </ProtractedRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <ProtractedRoute>
+                    <ProfileScreen />
+                  </ProtractedRoute>
+                }
+              />
+              <Route
+                path="/placeorder"
+                element={
+                  <ProtractedRoute>
+                    <PlaceOrderScreen />
+                  </ProtractedRoute>
+                }
+              />
+              <Route
+                path="/order/:id"
+                element={
+                  <ProtractedRoute>
+                    <OrderScreen />
+                  </ProtractedRoute>
+                }
+              />
               <Route
                 path="/orderhistory"
-                element={<OrderHistoryScreen />}
-              ></Route>
+                element={
+                  <ProtractedRoute>
+                    <OrderHistoryScreen />
+                  </ProtractedRoute>
+                }
+              />
+              {/*Admin Router*/}
+              <Route
+                path="/admin/dashboard"
+                element={
+                  <AdminRoute>
+                    <DashboardScreen />
+                  </AdminRoute>
+                }
+              />
             </Routes>
           </Container>
         </main>
