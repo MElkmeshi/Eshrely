@@ -1,23 +1,21 @@
 import { useContext } from "react";
-import { ContextValue, Store } from "../Store";
+import { Store } from "../Store";
 import { Helmet } from "react-helmet-async";
 import { Button, Card, Col, ListGroup, Row } from "react-bootstrap";
 import MessageBox from "../Components/MessageBox";
 import { Link, useNavigate } from "react-router-dom";
-import { ProductInterface } from "../types";
 import axios from "axios";
+import { CartItem } from "../types/Cart";
 
 export default function CartScreen() {
   const navigate = useNavigate();
-  const context = useContext<ContextValue | null>(Store);
-  if (!context) {
-    throw new Error("Store context not found");
-  }
-  const { state, dispatch: ctxDispatch } = context;
-  const updateCartHandler = async (
-    item: ProductInterface,
-    quantity: number
-  ) => {
+  const {
+    state: {
+      cart: { cartItems },
+    },
+    dispatch: ctxDispatch,
+  } = useContext(Store);
+  const updateCartHandler = async (item: CartItem, quantity: number) => {
     const { data } = await axios.get(`/api/products/${item._id}`);
     if (data.countInStock < quantity) {
       window.alert("Sorry. Product is out of stock");
@@ -31,10 +29,7 @@ export default function CartScreen() {
       },
     });
   };
-  const {
-    cart: { cartItems },
-  } = state;
-  const removeItemHandler = (item: ProductInterface) => () => {
+  const removeItemHandler = (item: CartItem) => () => {
     ctxDispatch({
       type: "CART_REMOVE_ITEM",
       payload: item,
@@ -57,7 +52,7 @@ export default function CartScreen() {
             </MessageBox>
           ) : (
             <ListGroup variant="flush">
-              {cartItems.map((item: ProductInterface) => (
+              {cartItems.map((item: CartItem) => (
                 <ListGroup.Item key={item._id}>
                   <Row className="align-items-center">
                     <Col md={4}>
@@ -109,12 +104,12 @@ export default function CartScreen() {
                   <h3>
                     Subtotal (
                     {cartItems.reduce(
-                      (a: number, c: ProductInterface) => a + (c.quantity || 0),
+                      (a: number, c: CartItem) => a + (c.quantity || 0),
                       0
                     )}{" "}
                     items) : $
                     {cartItems.reduce(
-                      (a: number, c: ProductInterface) =>
+                      (a: number, c: CartItem) =>
                         a + c.price * (c.quantity || 0),
                       0
                     )}

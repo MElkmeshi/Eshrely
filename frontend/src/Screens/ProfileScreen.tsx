@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { ContextValue, Store } from "../Store";
+import { Store } from "../Store";
 import { Helmet } from "react-helmet-async";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -15,10 +15,10 @@ interface ProfileState {
 }
 
 export default function ProfileScreen() {
-  const contextValue = useContext<ContextValue | null>(Store);
-  if (!contextValue) throw new Error("Store context not found");
-  const { state, dispatch: ctxDispatch } = contextValue;
-  const { userInfo } = state;
+  const {
+    state: { userInfo },
+    dispatch: cxtDispatch,
+  } = useContext(Store);
   if (!userInfo) throw new Error("userInfo not found");
   const [profile, setProfile] = useState({
     name: (userInfo || { name: "" }).name,
@@ -49,7 +49,7 @@ export default function ProfileScreen() {
           },
         }
       );
-      ctxDispatch({ type: "USER_SIGNIN", payload: data });
+      cxtDispatch({ type: "USER_SIGNIN", payload: data });
       localStorage.setItem("userInfo", JSON.stringify(data));
       toast.success("User updated successfully");
     } catch (err) {

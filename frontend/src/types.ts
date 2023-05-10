@@ -10,7 +10,6 @@ export interface ProductInterface {
   rating: number;
   numReviews: number;
   description: string;
-  quantity?: number;
 }
 interface FetchRequestAction {
   type: "FETCH_REQUEST";

@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Helmet } from "react-helmet-async";
-import { ContextValue, Store } from "../Store";
+import { Store } from "../Store";
 import { useNavigate } from "react-router-dom";
 import CheckoutSteps from "../Components/CheckoutSteps";
 
@@ -16,13 +16,14 @@ interface ShippingInterface {
 export default function ShippingScreen() {
   const navigate = useNavigate();
 
-  const contextValue = useContext<ContextValue | null>(Store);
-  if (!contextValue) throw new Error("Store context not found");
-  const { state, dispatch: ctxDispatch } = contextValue;
   const {
-    userInfo,
-    cart: { shippingAddress },
-  } = state;
+    state: {
+      cart: { shippingAddress },
+      userInfo,
+    },
+    dispatch: cxtDispatch,
+  } = useContext(Store);
+
   const [shipping, setShipping] = useState(
     shippingAddress || {
       fullName: "",
@@ -40,7 +41,7 @@ export default function ShippingScreen() {
 
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    ctxDispatch({
+    cxtDispatch({
       type: "SAVE_SHIPPING_ADDRESS",
       payload: shipping,
     });

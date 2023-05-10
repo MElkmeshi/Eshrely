@@ -1,26 +1,24 @@
 import { Link } from "react-router-dom";
-import { ProductInterface } from "../types";
+import { Product } from "../types/Product";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Rating from "./Rating";
 import axios from "axios";
 import { useContext } from "react";
-import { ContextValue, Store } from "../Store";
+import { Store } from "../Store";
 
 interface ProductProps {
-  product: ProductInterface;
+  product: Product;
 }
 
-function Product({ product }: ProductProps) {
-  const context = useContext<ContextValue | null>(Store);
-  if (!context) {
-    throw new Error("Store context not found");
-  }
-  const { state, dispatch: ctxDispatch } = context;
+function ProductItem({ product }: ProductProps) {
   const {
-    cart: { cartItems },
-  } = state;
-  const addToCartHandler = async (item: ProductInterface) => {
+    state: {
+      cart: { cartItems },
+    },
+    dispatch: ctxDispatch,
+  } = useContext(Store);
+  const addToCartHandler = async (item: Product) => {
     const existItem = cartItems.find((x) => x._id === product._id);
     const quantity =
       existItem && existItem.quantity ? existItem.quantity + 1 : 1;
@@ -59,4 +57,4 @@ function Product({ product }: ProductProps) {
     </Card>
   );
 }
-export default Product;
+export default ProductItem;

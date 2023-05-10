@@ -9,7 +9,7 @@ import MessageBox from "../Components/MessageBox";
 import LoadingBox from "../Components/LoadingBox";
 import Rating from "../Components/Rating";
 import { Helmet } from "react-helmet-async";
-import Product from "../Components/Product";
+import Product from "../Components/ProductItem";
 import { LinkContainer } from "react-router-bootstrap";
 
 const prices = [

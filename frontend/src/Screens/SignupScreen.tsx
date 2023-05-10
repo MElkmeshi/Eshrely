@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import Button from "react-bootstrap/Button";
 import { Helmet } from "react-helmet-async";
 import { useState, useContext, useEffect } from "react";
-import { Store, ContextValue } from "../Store";
+import { Store } from "../Store";
 import axios, { AxiosError } from "axios";
 import { getError } from "../utils";
 
@@ -29,12 +29,11 @@ export default function SignupScreen() {
   const redirectInUrl = new URLSearchParams(search).get("redirect");
   const redirect = redirectInUrl ? redirectInUrl : "/";
 
-  const contextValue = useContext<ContextValue | null>(Store);
-  if (!contextValue) {
-    throw new Error("Store context not found");
-  }
-  const { state, dispatch: cxtDispatch } = contextValue;
-  const { userInfo } = state;
+  const {
+    state: { userInfo },
+    dispatch: cxtDispatch,
+  } = useContext(Store);
+
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { name, email, password, confirmPassword } = signup;

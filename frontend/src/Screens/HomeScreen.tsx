@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useReducer } from "react";
 import { Row, Col } from "react-bootstrap";
-import Product from "../Components/Product";
+import Product from "../Components/ProductItem";
 import { AppAction, StateProductsPage } from "../types";
 import { Helmet } from "react-helmet-async";
 import LoadingBox from "../Components/LoadingBox";

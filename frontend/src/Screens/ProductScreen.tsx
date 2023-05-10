@@ -13,7 +13,7 @@ import { Helmet } from "react-helmet-async";
 import LoadingBox from "../Components/LoadingBox";
 import MessageBox from "../Components/MessageBox";
 import { getError } from "../utils";
-import { Store, ContextValue } from "../Store";
+import { Store } from "../Store";
 
 function ProductScreen() {
   const navigate = useNavigate();
@@ -57,12 +57,10 @@ function ProductScreen() {
     fetchData();
   }, [slug]);
 
-  const contextValue = useContext<ContextValue | null>(Store);
-  if (!contextValue) {
-    throw new Error("Store context not found");
-  }
-  const { state, dispatch: cxtDispatch } = contextValue;
-  const { cart } = state;
+  const {
+    state: { cart },
+    dispatch: cxtDispatch,
+  } = useContext(Store);
   const addToCartHandler = async () => {
     const existItem = cart.cartItems.find((x) => x._id === product._id);
     const quantity =

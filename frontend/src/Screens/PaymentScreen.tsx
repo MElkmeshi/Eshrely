@@ -3,17 +3,17 @@ import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { ContextValue, Store } from "../Store";
+import { Store } from "../Store";
 import CheckoutSteps from "../Components/CheckoutSteps";
 
 export default function PaymentMethodScreen() {
   const navigate = useNavigate();
-  const contextValue = useContext<ContextValue | null>(Store);
-  if (!contextValue) throw new Error("Store context not found");
-  const { state, dispatch: ctxDispatch } = contextValue;
   const {
-    cart: { shippingAddress, paymentMethod },
-  } = state;
+    state: {
+      cart: { shippingAddress, paymentMethod },
+    },
+    dispatch: ctxDispatch,
+  } = useContext(Store);
 
   const [paymentMethodName, setPaymentMethod] = useState(
     paymentMethod || "PayPal"

@@ -7,39 +7,11 @@ import Col from "react-bootstrap/Col";
 import ListGroup from "react-bootstrap/ListGroup";
 import Card from "react-bootstrap/Card";
 import { Link } from "react-router-dom";
-import { ContextValue, Store } from "../Store";
+import { Store } from "../Store";
 import { getError } from "../utils";
 import LoadingBox from "../Components/LoadingBox";
 import MessageBox from "../Components/MessageBox";
-
-interface Order {
-  _id: string;
-  orderItems: {
-    _id: string;
-    name: string;
-    slug: string;
-    image: string;
-    price: number;
-    quantity: number;
-  }[];
-  shippingAddress: {
-    fullName: string;
-    address: string;
-    city: string;
-    postalCode: string;
-    country: string;
-  };
-  paymentMethod: string;
-  itemsPrice: number;
-  shippingPrice: number;
-  taxPrice: number;
-  totalPrice: number;
-  user: string;
-  isPaid: boolean;
-  paidAt: Date;
-  isDelivered: boolean;
-  deliveredAt: Date;
-}
+import { Order } from "../types/Order";
 
 interface OrderState {
   loading: boolean;
@@ -47,24 +19,23 @@ interface OrderState {
   order: Order;
 }
 
-interface Action1 {
-  type: "FETCH_REQUEST";
-}
-interface Action2 {
-  type: "FETCH_SUCCESS";
-  payload: Order;
-}
-interface Action3 {
-  type: "FETCH_FAIL";
-  payload: string;
-}
-type Action = Action1 | Action2 | Action3;
+type Action =
+  | {
+      type: "FETCH_REQUEST";
+    }
+  | {
+      type: "FETCH_SUCCESS";
+      payload: Order;
+    }
+  | {
+      type: "FETCH_FAIL";
+      payload: string;
+    };
 
 export default function OrderScreen() {
-  const contextValue = useContext<ContextValue | null>(Store);
-  if (!contextValue) throw new Error("Store context not found");
-  const { state } = contextValue;
-  const { userInfo } = state;
+  const {
+    state: { userInfo },
+  } = useContext(Store);
   const params = useParams();
   const { id: orderId } = params;
   const navigate = useNavigate();

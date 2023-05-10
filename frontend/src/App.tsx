@@ -8,7 +8,7 @@ import Badge from "react-bootstrap/Badge";
 import Container from "react-bootstrap/Container";
 import { ToastContainer, toast } from "react-toastify";
 import { LinkContainer } from "react-router-bootstrap";
-import { Store, ContextValue } from "./Store";
+import { Store } from "./Store";
 import { useContext, useState, useEffect } from "react";
 import CartScreen from "./Screens/CartScreen";
 import SigninScreen from "./Screens/SigninScreen";
@@ -26,10 +26,10 @@ import SearchBox from "./Components/SearchBox";
 import SearchScreen from "./Screens/SearchScreen";
 
 function App() {
-  const contextValue = useContext<ContextValue | null>(Store);
-  if (!contextValue) throw new Error("Store context not found");
-  const { state, dispatch: ctxDispatch } = contextValue;
-  const { cart, userInfo } = state;
+  const {
+    state: { cart, userInfo },
+    dispatch: ctxDispatch,
+  } = useContext(Store);
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
   const [categories, setCategories] = useState([]);
   useEffect(() => {

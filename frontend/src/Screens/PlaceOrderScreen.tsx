@@ -6,7 +6,7 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import ListGroup from "react-bootstrap/ListGroup";
-import { ContextValue, Store } from "../Store";
+import { Store } from "../Store";
 import CheckoutSteps from "../Components/CheckoutSteps";
 import axios, { AxiosError } from "axios";
 import { toast } from "react-toastify";
@@ -38,10 +38,10 @@ export default function PlaceOrderScreen() {
     loading: false,
   } as State);
   const navigate = useNavigate();
-  const contextValue = useContext<ContextValue | null>(Store);
-  if (!contextValue) throw new Error("Store context not found");
-  const { state, dispatch: ctxDispatch } = contextValue;
-  const { cart, userInfo } = state;
+  const {
+    state: { cart, userInfo },
+    dispatch: ctxDispatch,
+  } = useContext(Store);
   if (!cart) throw new Error("Cart Object context not found");
   if (!cart.cartItems) throw new Error("Cart context not found");
   if (!userInfo) throw new Error("userInfo not found");
