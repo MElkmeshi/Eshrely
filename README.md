@@ -1,13 +1,17 @@
-# MERN AMAZONA
+# Eshrely
 
-# Lessons
+This repository is a TypeScript reimplementation of the MERN Amazona project found at https://github.com/basir/mern-amazona. The primary goal of this project is to help me understand how to create an e-commerce web app and successfully complete my Web Development course.
 
-1. Introduction
-2. Install Tools
-3. Create React App
-4. Create Git Repository
-5. List Products
-   1. create products array
-   2. add product images
-   3. render products
-   4. style products
+to run project in your local machine run 
+git clone https://github.com/MElkmeshi/Eshrely.git
+then change dirctoty to the folder which contains the code
+and run two terminals one for backend and the other for the frontend 
+for the the backend
+cd backend 
+npm i
+npm run dev 
+
+for the frontend same stpes
+cd frontend 
+npm i
+npm run dev 
