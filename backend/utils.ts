@@ -40,3 +40,11 @@ export const isAuth = (
     res.status(401).send({ message: "No Token" });
   }
 };
+
+export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+  if (req.body.user && req.body.user.isAdmin) {
+    next();
+  } else {
+    res.status(401).send({ message: "Invalid Admin Token" });
+  }
+};

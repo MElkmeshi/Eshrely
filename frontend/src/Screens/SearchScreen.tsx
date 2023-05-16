@@ -156,6 +156,7 @@ export default function SearchScreen() {
     };
     fetchCategories();
   }, [dispatch]);
+
   const getFilterUrl = (filter: Filter) => {
     const filterPage = filter.page || page;
     const filterCategory = filter.category || category;
@@ -168,8 +169,9 @@ export default function SearchScreen() {
       search: `?category=${filterCategory}&query=${filterQuery}&price=${filterPrice}&rating=${filterRating}&order=${sortOrder}&page=${filterPage}`,
     };
   };
+
   return (
-    <div>
+    <>
       <Helmet>
         <title>Search Products</title>
       </Helmet>
@@ -320,6 +322,6 @@ export default function SearchScreen() {
           )}
         </Col>
       </Row>
-    </div>
+    </>
   );
 }
