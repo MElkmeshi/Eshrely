@@ -28,6 +28,7 @@ import ProtractedRoute from "./Components/ProtractedRoute";
 import AdminRoute from "./Components/AdminRoute";
 import DashboardScreen from "./Screens/DashboardScreen";
 import ProductListScreen from "./Screens/ProductListScreen";
+import ProductEditScreen from "./Screens/ProductEditScreen";
 
 function App() {
   const {
@@ -229,10 +230,18 @@ function App() {
                 }
               />
               <Route
-                path="//admin/products"
+                path="/admin/products"
                 element={
                   <AdminRoute>
                     <ProductListScreen />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/product/:id"
+                element={
+                  <AdminRoute>
+                    <ProductEditScreen />
                   </AdminRoute>
                 }
               />

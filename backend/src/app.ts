@@ -6,6 +6,7 @@ import seedRouter from "../routes/seedRoutes";
 import productRouter from "../routes/productRoutes";
 import userRouter from "../routes/userRoutes";
 import orderRouter from "../routes/orderRoutes";
+import uploadRouter from "../routes/uploadRoutes";
 
 const app = express();
 app.use(express.json());
@@ -21,6 +22,7 @@ app.use("/api/seed", seedRouter);
 app.use("/api/products", productRouter);
 app.use("/api/users", userRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/upload", uploadRouter);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).send({ message: err.message });

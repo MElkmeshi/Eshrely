@@ -47,7 +47,6 @@ orderRouter.get(
         },
       },
     ]);
-    console.log({ users, orders, dailyOrders, productCategories });
     res.send({ users, orders, dailyOrders, productCategories });
   })
 );
