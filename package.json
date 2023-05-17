@@ -1,0 +1,21 @@
+{
+  "name": "my-web",
+  "version": "1.0.0",
+  "description": "This repository is a TypeScript reimplementation of the MERN Amazona project found at https://github.com/basir/mern-amazona. The primary goal of this project is to help me understand how to create an e-commerce web app and successfully complete my Web Development course.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix backend\"  \"npm run dev --prefix frontend\" ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://MElkmeshi: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@github.com/MElkmeshi/Eshrely.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MElkmeshi/Eshrely/issues"
+  },
+  "homepage": "https://github.com/MElkmeshi/Eshrely#readme"
+}

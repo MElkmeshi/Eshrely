@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import Product from "../models/productModel";
 import expressAsyncHandler from "express-async-handler";
+import { isAdmin, isAuth } from "../utils";
 
 const productRouter = express.Router();
 
@@ -9,16 +10,61 @@ productRouter.get("/", async (req: express.Request, res: express.Response) => {
   res.send(products);
 });
 
+productRouter.post(
+  "/",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req: Request, res: Response) => {
+    const newProduct = new Product({
+      name: "sample name " + Date.now(),
+      slug: "sample-name-" + Date.now(),
+      image: "/images/p1.jpg",
+      price: 0,
+      category: "sample category",
+      brand: "sample brand",
+      countInStock: 0,
+      rating: 0,
+      numReviews: 0,
+      description: "sample description",
+    });
+    const product = await newProduct.save();
+    res.send({ message: "Product Created", product });
+  })
+);
+
+const PAGE_SIZE = 3;
+
+productRouter.get(
+  "/admin",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req: Request, res: Response) => {
+    const { query } = req;
+    const page: number = Number(query.page) || 1;
+    const pageSize: number = Number(query.pageSize) || PAGE_SIZE;
+
+    const products = await Product.find()
+      .skip(pageSize * (page - 1))
+      .limit(pageSize);
+    const countProducts = await Product.countDocuments();
+    res.send({
+      products,
+      countProducts,
+      page,
+      pages: Math.ceil(countProducts / pageSize),
+    });
+  })
+);
+
 productRouter.get(
   "/categories",
-  expressAsyncHandler(async (req: express.Request, res: express.Response) => {
+  expressAsyncHandler(async (req: Request, res: Response) => {
     const uniqueCategories = await Product.find({}).distinct("category");
     res.send(uniqueCategories);
   })
 );
 
 type SortOrder = 1 | -1;
-const PAGE_SIZE = 3;
 
 productRouter.get(
   "/search",

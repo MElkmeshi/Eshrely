@@ -27,6 +27,7 @@ import SearchScreen from "./Screens/SearchScreen";
 import ProtractedRoute from "./Components/ProtractedRoute";
 import AdminRoute from "./Components/AdminRoute";
 import DashboardScreen from "./Screens/DashboardScreen";
+import ProductListScreen from "./Screens/ProductListScreen";
 
 function App() {
   const {
@@ -119,7 +120,7 @@ function App() {
                       <LinkContainer to="/admin/dashboard">
                         <NavDropdown.Item>Dashboard</NavDropdown.Item>
                       </LinkContainer>
-                      <LinkContainer to="/admin/productlist">
+                      <LinkContainer to="/admin/products">
                         <NavDropdown.Item>Products</NavDropdown.Item>
                       </LinkContainer>
                       <LinkContainer to="/admin/orderlist">
@@ -224,6 +225,14 @@ function App() {
                 element={
                   <AdminRoute>
                     <DashboardScreen />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="//admin/products"
+                element={
+                  <AdminRoute>
+                    <ProductListScreen />
                   </AdminRoute>
                 }
               />
