@@ -68,3 +68,6 @@ main {
  .rating span:hover ~ span {
   color: #ccc;
 } */
+button.thumbnail {
+  padding: 0;
+}

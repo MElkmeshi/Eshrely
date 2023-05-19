@@ -1,3 +1,5 @@
+import { Product } from "./types/Product";
+
 export interface ProductInterface {
   _id: string;
   name: string;
@@ -33,14 +35,14 @@ export interface StateProductsPage {
   error: string;
 }
 export interface StateOneProductPage {
-  product: ProductInterface;
+  product: Product;
   loading: boolean;
   error: string;
 }
 
 interface FetchSuccessActionOneProductPage {
   type: "FETCH_SUCCESS";
-  payload: ProductInterface;
+  payload: Product;
 }
 export type AppActionOneProductPage =
   | FetchSuccessActionOneProductPage

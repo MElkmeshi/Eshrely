@@ -1,24 +1,21 @@
 import express, { Request, Response } from "express";
-import multer from "multer";
 import path from "path";
-import Product from "../models/productModel";
+import fileUpload, { UploadedFile } from "express-fileupload";
 
 const uploadRouter = express.Router();
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "../frontend/images/");
-  },
-  filename: async (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const countProducts = await Product.countDocuments();
-    cb(null, "p" + countProducts + ext);
-  },
-});
-
-const upload = multer({ storage: storage });
-
-uploadRouter.post("/", upload.single("file"), (req: Request, res: Response) => {
-  res.send({ file: req.file.filename, url: `/images/${req.file.filename}` });
+uploadRouter.use(fileUpload());
+uploadRouter.post("/", async (req: Request, res: Response) => {
+  if (!req.files) {
+    return res.status(400).send("No files were uploaded.");
+  }
+  let file = req.files.file as UploadedFile;
+  let ext = path.extname(file.name);
+  let filename = Date.now() + ext;
+  let uploadPath = "../frontend/images/" + filename;
+  file.mv(uploadPath, function (err) {
+    if (err) return res.status(500).send(err);
+    res.send({ file: filename, url: `/images/${filename}` });
+  });
 });
 
 export default uploadRouter;

@@ -4,7 +4,10 @@ import { Product } from "../types/Product";
 import axios, { AxiosError } from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { getError } from "../utils";
-import { Button, Container, Form } from "react-bootstrap";
+import Container from "react-bootstrap/Container";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import ListGroup from "react-bootstrap/ListGroup";
 import { Helmet } from "react-helmet-async";
 import LoadingBox from "../Components/LoadingBox";
 import MessageBox from "../Components/MessageBox";
@@ -40,6 +43,7 @@ export default function ProductEditScreen() {
     slug: "",
     category: "",
     image: "",
+    images: [],
     price: 0,
     brand: "",
     countInStock: 0,
@@ -128,13 +132,55 @@ export default function ProductEditScreen() {
       } else console.error(err);
     }
   };
+  const uploadFileHandler = async (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+    forImages: boolean
+  ) => {
+    const target = e.target as HTMLInputElement;
+    if (target.files !== null) {
+      const file = target.files[0];
+      const bodyFormData = new FormData();
+      bodyFormData.append("file", file);
+      try {
+        dispatch({ type: "UPLOAD_REQUEST" });
+        const { data } = await axios.post("/api/upload", bodyFormData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            authorization: `Bearer ${userInfo?.token}`,
+          },
+        });
+        dispatch({ type: "UPLOAD_SUCCESS" });
+        if (forImages) {
+          setProduct((p) => ({ ...p, images: [...p.images, data.url] }));
+        } else {
+          setProduct((p) => ({ ...p, image: data.url }));
+        }
+        console.log([...product.images, data.url]);
+        toast.success("Image uploaded successfully. Please save changes");
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          toast.error(getError(err));
+          dispatch({ type: "UPLOAD_FAIL", payload: getError(err) });
+        } else console.error(err);
+      }
+    } else {
+      toast.error("Please select an image file");
+      return;
+    }
+  };
+  const deleteFileHandler = async (fileName: string) => {
+    const images = product.images.filter((x) => x !== fileName);
+    setProduct((p) => ({ ...p, images }));
+    toast.success("Image removed successfully. click Update to apply it");
+  };
   return (
     <Container className="small-container">
       <Helmet>
         <title>Edit Product ${productId}</title>
       </Helmet>
       <h1>Edit Product {productId}</h1>
-
       {loading ? (
         <LoadingBox></LoadingBox>
       ) : error ? (
@@ -182,45 +228,42 @@ export default function ProductEditScreen() {
             />
           </Form.Group>
           <Form.Group className="mb-3" controlId="imageFile">
-            <Form.Label>Upload File</Form.Label>
+            <Form.Label>Upload Image</Form.Label>
             <Form.Control
               type="file"
-              onChange={async (e) => {
-                const target = e.target as HTMLInputElement;
-                if (target.files !== null) {
-                  const file = target.files[0];
-                  const bodyFormData = new FormData();
-                  bodyFormData.append("file", file);
-                  try {
-                    dispatch({ type: "UPLOAD_REQUEST" });
-                    const { data } = await axios.post(
-                      "/api/upload",
-                      bodyFormData,
-                      {
-                        headers: {
-                          "Content-Type": "multipart/form-data",
-                          authorization: `Bearer ${userInfo?.token}`,
-                        },
-                      }
-                    );
-                    dispatch({ type: "UPLOAD_SUCCESS" });
-
-                    toast.success("Image uploaded successfully");
-                    setProduct((p) => ({ ...p, image: data.url }));
-                  } catch (err) {
-                    if (err instanceof AxiosError) {
-                      toast.error(getError(err));
-                      dispatch({ type: "UPLOAD_FAIL", payload: getError(err) });
-                    } else console.error(err);
-                  }
-                } else {
-                  toast.error("Please select an image file");
-                  return;
-                }
+              onChange={(e) => {
+                uploadFileHandler(e, false);
               }}
             />
             {loadingUpload && <LoadingBox></LoadingBox>}
           </Form.Group>
+
+          <Form.Group className="mb-3" controlId="additionalImage">
+            <Form.Label>Additional Images</Form.Label>
+            {product.images && product.images?.length === 0 && (
+              <MessageBox>No image</MessageBox>
+            )}
+            <ListGroup variant="flush">
+              {product.images.map((x) => (
+                <ListGroup.Item key={x}>
+                  {x}
+                  <Button variant="light" onClick={() => deleteFileHandler(x)}>
+                    <i className="fa fa-times-circle"></i>
+                  </Button>
+                </ListGroup.Item>
+              ))}
+            </ListGroup>
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="additionalImageFile">
+            <Form.Label>Upload Aditional Image</Form.Label>
+            <Form.Control
+              type="file"
+              onChange={(e) => uploadFileHandler(e, true)}
+            />
+            {loadingUpload && <LoadingBox></LoadingBox>}
+          </Form.Group>
+
           <Form.Group className="mb-3" controlId="category">
             <Form.Label>Category</Form.Label>
             <Form.Control

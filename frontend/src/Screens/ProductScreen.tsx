@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useEffect, useReducer, useContext } from "react";
+import { useEffect, useReducer, useContext, useState } from "react";
 import { AppActionOneProductPage, StateOneProductPage } from "../types";
 import axios from "axios";
 import Row from "react-bootstrap/Row";
@@ -76,6 +76,7 @@ function ProductScreen() {
     });
     navigate("/cart");
   };
+  const [selectedImage, setSelectedImage] = useState("");
 
   return loading ? (
     <LoadingBox />
@@ -84,7 +85,11 @@ function ProductScreen() {
   ) : (
     <Row>
       <Col md={6}>
-        <img className="img-large" src={product.image} alt={product.name}></img>
+        <img
+          className="img-large"
+          src={selectedImage || product.image}
+          alt={product.name}
+        ></img>
       </Col>
       <Col md={3}>
         <ListGroup variant="flush">
@@ -101,6 +106,24 @@ function ProductScreen() {
             ></Rating>
           </ListGroup.Item>
           <ListGroup.Item>Pirce : ${product.price}</ListGroup.Item>
+          <ListGroup.Item>
+            <Row xs={1} md={2} className="g-2">
+              {[product.image, ...product.images].map((x) => (
+                <Col key={x}>
+                  <Card>
+                    <Button
+                      className="thumbnail"
+                      type="button"
+                      variant="light"
+                      onClick={() => setSelectedImage(x)}
+                    >
+                      <Card.Img variant="top" src={x} alt="product" />
+                    </Button>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          </ListGroup.Item>
           <ListGroup.Item>
             Description:
             <p>{product.description}</p>

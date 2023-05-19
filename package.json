@@ -17,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/MElkmeshi/Eshrely/issues"
   },
-  "homepage": "https://github.com/MElkmeshi/Eshrely#readme"
+  "homepage": "https://github.com/MElkmeshi/Eshrely#readme",
+  "dependencies": {
+    "@types/express-fileupload": "^1.4.1",
+    "@types/react-bootstrap": "^0.32.32",
+    "express-fileupload": "^1.4.0"
+  }
 }
