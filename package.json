@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/MElkmeshi/Eshrely#readme",
   "dependencies": {
-    "@types/express-fileupload": "^1.4.1",
-    "express-fileupload": "^1.4.0"
+    "concurrently": "^6.2.0"
   }
 }
