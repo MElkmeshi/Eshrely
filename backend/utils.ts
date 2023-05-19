@@ -1,7 +1,13 @@
 import jwt from "jsonwebtoken";
-import { UserInterface } from "./src/data";
 import { Document } from "mongoose";
 import { Request, Response, NextFunction } from "express";
+
+export interface UserInterface {
+  name: string;
+  email: string;
+  password: string;
+  isAdmin: boolean;
+}
 
 export interface UserInterfaceWithDocument extends UserInterface, Document {}
 

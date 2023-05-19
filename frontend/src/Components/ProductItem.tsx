@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
-import { Product } from "../types/Product";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Rating from "./Rating";
 import axios from "axios";
 import { useContext } from "react";
 import { Store } from "../Store";
+import { ProductInterface } from "../types";
 
 interface ProductProps {
-  product: Product;
+  product: ProductInterface;
 }
 
 function ProductItem({ product }: ProductProps) {
@@ -18,7 +18,7 @@ function ProductItem({ product }: ProductProps) {
     },
     dispatch: ctxDispatch,
   } = useContext(Store);
-  const addToCartHandler = async (item: Product) => {
+  const addToCartHandler = async (item: ProductInterface) => {
     const existItem = cartItems.find((x) => x._id === product._id);
     const quantity =
       existItem && existItem.quantity ? existItem.quantity + 1 : 1;

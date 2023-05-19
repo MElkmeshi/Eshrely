@@ -18,6 +18,10 @@ const userModel_1 = __importDefault(require("../models/userModel"));
 const userRouter = express_1.default.Router();
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const utils_1 = require("../utils");
+userRouter.get("/", utils_1.isAuth, utils_1.isAdmin, (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const users = yield userModel_1.default.find({});
+    res.send(users);
+})));
 userRouter.post("/signin", (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const user = yield userModel_1.default.findOne({ email: req.body.email });
     if (user) {
@@ -65,6 +69,42 @@ userRouter.put("/profile", utils_1.isAuth, (0, express_async_handler_1.default)(
             isAdmin: updatedUser.isAdmin,
             token: (0, utils_1.generateToken)(updatedUser),
         });
+    }
+    else {
+        res.status(404).send({ message: "User Not Found" });
+    }
+})));
+userRouter.get("/:id", utils_1.isAuth, utils_1.isAdmin, (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel_1.default.findById(req.params.id);
+    if (user) {
+        res.send(user);
+    }
+    else {
+        res.status(404).send({ message: "User Not Found" });
+    }
+})));
+userRouter.delete("/:id", utils_1.isAuth, utils_1.isAdmin, (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel_1.default.findById(req.params.id);
+    if (user) {
+        if (user.email === "elkmeshi2002@gmail.com") {
+            res.status(400).send({ message: "Can Not Delete Founder User" });
+            return;
+        }
+        yield user.deleteOne();
+        res.send({ message: "User Deleted" });
+    }
+    else {
+        res.status(404).send({ message: "User Not Found" });
+    }
+})));
+userRouter.put("/:id", utils_1.isAuth, utils_1.isAdmin, (0, express_async_handler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield userModel_1.default.findById(req.params.id);
+    if (user) {
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        user.isAdmin = Boolean(req.body.isAdmin);
+        const updatedUser = yield user.save();
+        res.send({ message: "User Updated", user: updatedUser });
     }
     else {
         res.status(404).send({ message: "User Not Found" });
