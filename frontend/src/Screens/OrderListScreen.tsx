@@ -6,7 +6,7 @@ import { getError } from "../utils";
 import MessageBox from "../Components/MessageBox";
 import LoadingBox from "../Components/LoadingBox";
 import { Helmet } from "react-helmet-async";
-import { Button } from "react-bootstrap";
+import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 

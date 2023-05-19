@@ -29,7 +29,9 @@ import AdminRoute from "./Components/AdminRoute";
 import DashboardScreen from "./Screens/DashboardScreen";
 import ProductListScreen from "./Screens/ProductListScreen";
 import ProductEditScreen from "./Screens/ProductEditScreen";
+import UserListScreen from "./Screens/UserListScreen";
 import OrderListScreen from "./Screens/OrderListScreen";
+import UserEditScreen from "./Screens/UserEditScreen";
 
 function App() {
   const {
@@ -231,6 +233,22 @@ function App() {
                 }
               />
               <Route
+                path="/admin/userlist"
+                element={
+                  <AdminRoute>
+                    <UserListScreen />
+                  </AdminRoute>
+                }
+              />
+              <Route
+                path="/admin/orderlist"
+                element={
+                  <AdminRoute>
+                    <OrderListScreen />
+                  </AdminRoute>
+                }
+              />
+              <Route
                 path="/admin/products"
                 element={
                   <AdminRoute>
@@ -247,10 +265,10 @@ function App() {
                 }
               />
               <Route
-                path="/admin/orderlist"
+                path="/admin/user/:id"
                 element={
                   <AdminRoute>
-                    <OrderListScreen />
+                    <UserEditScreen />
                   </AdminRoute>
                 }
               />
