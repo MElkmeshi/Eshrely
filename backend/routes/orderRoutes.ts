@@ -7,6 +7,31 @@ import Product from "../models/productModel";
 
 const orderRouter = express.Router();
 
+orderRouter.delete(
+  "/:id",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req: Request, res: Response) => {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      await order.deleteOne();
+      res.send({ message: "Order Deleted" });
+    } else {
+      res.status(404).send({ message: "Order Not Found" });
+    }
+  })
+);
+
+orderRouter.get(
+  "/",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req: Request, res: Response) => {
+    const orders = await Order.find({}).populate("user", "name");
+    res.send(orders);
+  })
+);
+
 orderRouter.get(
   "/summary",
   isAuth,
@@ -92,4 +117,38 @@ orderRouter.get(
     }
   })
 );
+orderRouter.put(
+  "/:id/pay",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req: Request, res: Response) => {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      order.isPaid = true;
+      order.paidAt = new Date();
+      await order.save();
+      res.send({ message: "Order Paid" });
+    } else {
+      res.status(404).send({ message: "Order Not Found" });
+    }
+  })
+);
+
+orderRouter.put(
+  "/:id/deliver",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req: Request, res: Response) => {
+    const order = await Order.findById(req.params.id);
+    if (order) {
+      order.isDelivered = true;
+      order.deliveredAt = new Date();
+      await order.save();
+      res.send({ message: "Order Delivered" });
+    } else {
+      res.status(404).send({ message: "Order Not Found" });
+    }
+  })
+);
+
 export default orderRouter;

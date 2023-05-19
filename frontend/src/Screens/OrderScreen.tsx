@@ -12,16 +12,31 @@ import { getError } from "../utils";
 import LoadingBox from "../Components/LoadingBox";
 import MessageBox from "../Components/MessageBox";
 import { Order } from "../types/Order";
+import { Button } from "react-bootstrap";
+import { toast } from "react-toastify";
 
 interface OrderState {
   loading: boolean;
   error: string;
   order: Order;
+  loadingDeliver: boolean;
+  successDeliver: boolean;
+  loadingPay: boolean;
+  successPay: boolean;
 }
 
 type Action =
   | {
-      type: "FETCH_REQUEST";
+      type:
+        | "FETCH_REQUEST"
+        | "DELIVER_REQUEST"
+        | "DELIVER_SUCCESS"
+        | "DELIVER_RESET"
+        | "DELIVER_FAIL"
+        | "PAY_REQUEST"
+        | "PAY_SUCCESS"
+        | "PAY_RESET"
+        | "PAY_FAIL";
     }
   | {
       type: "FETCH_SUCCESS";
@@ -40,7 +55,18 @@ export default function OrderScreen() {
   const { id: orderId } = params;
   const navigate = useNavigate();
 
-  const [{ loading, error, order }, dispatch] = useReducer(
+  const [
+    {
+      loading,
+      error,
+      order,
+      loadingDeliver,
+      successDeliver,
+      loadingPay,
+      successPay,
+    },
+    dispatch,
+  ] = useReducer(
     (state: OrderState, action: Action) => {
       switch (action.type) {
         case "FETCH_REQUEST":
@@ -49,6 +75,22 @@ export default function OrderScreen() {
           return { ...state, loading: false, error: action.payload };
         case "FETCH_SUCCESS":
           return { ...state, loading: false, order: action.payload };
+        case "DELIVER_REQUEST":
+          return { ...state, loadingDeliver: true };
+        case "DELIVER_SUCCESS":
+          return { ...state, loadingDeliver: false, successDeliver: true };
+        case "DELIVER_RESET":
+          return { ...state, loadingDeliver: false, successDeliver: false };
+        case "DELIVER_FAIL":
+          return { ...state, loadingDeliver: false };
+        case "PAY_REQUEST":
+          return { ...state, loadingPay: true };
+        case "PAY_SUCCESS":
+          return { ...state, loadingPay: false, successPay: true };
+        case "PAY_RESET":
+          return { ...state, loadingPay: false, successPay: false };
+        case "PAY_FAIL":
+          return { ...state, loadingPay: false };
         default:
           return state;
       }
@@ -57,6 +99,10 @@ export default function OrderScreen() {
       loading: true,
       order: {} as Order,
       error: "",
+      loadingDeliver: false,
+      successDeliver: false,
+      loadingPay: false,
+      successPay: false,
     } as OrderState
   );
 
@@ -82,10 +128,67 @@ export default function OrderScreen() {
     if (!userInfo) {
       return navigate("/login");
     }
-    if (!order._id || (order._id && order._id !== orderId)) {
+    if (
+      !order._id ||
+      successDeliver ||
+      successPay ||
+      (order._id && order._id !== orderId)
+    ) {
       fetchOrder();
+      if (successPay) {
+        dispatch({ type: "PAY_RESET" });
+      }
+      if (successDeliver) {
+        dispatch({ type: "DELIVER_RESET" });
+      }
     }
-  }, [order, userInfo, orderId, navigate]);
+  }, [order, userInfo, orderId, successDeliver, navigate, successPay]);
+  const deliverHandler = async () => {
+    try {
+      dispatch({ type: "DELIVER_REQUEST" });
+      await axios.put(
+        `/api/orders/${orderId}/deliver`,
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${userInfo?.token}`,
+          },
+        }
+      );
+      dispatch({ type: "DELIVER_SUCCESS" });
+      toast.success("Order delivered successfully");
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(getError(err));
+      } else {
+        console.log(err);
+      }
+      dispatch({ type: "DELIVER_FAIL" });
+    }
+  };
+  const payHandler = async () => {
+    try {
+      dispatch({ type: "PAY_REQUEST" });
+      await axios.put(
+        `/api/orders/${orderId}/pay`,
+        {},
+        {
+          headers: {
+            authorization: `Bearer ${userInfo?.token}`,
+          },
+        }
+      );
+      dispatch({ type: "PAY_SUCCESS" });
+      toast.success("Order paid successfully");
+    } catch (err) {
+      if (err instanceof AxiosError) {
+        toast.error(getError(err));
+      } else {
+        console.log(err);
+      }
+      dispatch({ type: "PAY_FAIL" });
+    }
+  };
   return loading ? (
     <LoadingBox></LoadingBox>
   ) : error ? (
@@ -191,6 +294,26 @@ export default function OrderScreen() {
                   </Row>
                 </ListGroup.Item>
               </ListGroup>
+              {userInfo?.isAdmin && !order.isPaid && !order.isDelivered && (
+                <ListGroup.Item>
+                  {loadingPay && <LoadingBox></LoadingBox>}
+                  <div className="d-grid">
+                    <Button type="button" onClick={payHandler}>
+                      Pay Order
+                    </Button>
+                  </div>
+                </ListGroup.Item>
+              )}
+              {userInfo?.isAdmin && order.isPaid && !order.isDelivered && (
+                <ListGroup.Item>
+                  {loadingDeliver && <LoadingBox></LoadingBox>}
+                  <div className="d-grid">
+                    <Button type="button" onClick={deliverHandler}>
+                      Deliver Order
+                    </Button>
+                  </div>
+                </ListGroup.Item>
+              )}
             </Card.Body>
           </Card>
         </Col>
