@@ -32,7 +32,6 @@ import ProductEditScreen from "./Screens/ProductEditScreen";
 import UserListScreen from "./Screens/UserListScreen";
 import OrderListScreen from "./Screens/OrderListScreen";
 import UserEditScreen from "./Screens/UserEditScreen";
-
 function App() {
   const {
     state: { cart, userInfo },
